@@ -1,0 +1,118 @@
+postgres=# CREATE DATABASE db_toko
+postgres-# CREATE DATABASE db_toko;
+ERROR:  syntax error at or near "CREATE"
+LINE 2: CREATE DATABASE db_toko;
+        ^
+postgres=# CREATE DATABASE db_toko;
+CREATE DATABASE
+postgres=# \c db_toko
+You are now connected to database "db_toko" as user "postgres".
+db_toko=# -- Masuk ke database kamu
+db_toko=# \c db_toko_online
+connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "db_toko_online" does not exist
+Previous connection kept
+db_toko=#
+db_toko=# -- Buat tabel customer
+db_toko=# CREATE TABLE IF NOT EXISTS customer (
+db_toko(#     cust_id SERIAL PRIMARY KEY,
+db_toko(#     name VARCHAR(100),
+db_toko(#     city VARCHAR(50),
+db_toko(#     phone VARCHAR(15)
+db_toko(# );
+CREATE TABLE
+db_toko=#
+db_toko=# -- Buat tabel product
+db_toko=# CREATE TABLE IF NOT EXISTS product (
+db_toko(#     prod_id SERIAL PRIMARY KEY,
+db_toko(#     product_name VARCHAR(100),
+db_toko(#     price NUMERIC(10,2),
+db_toko(#     stock INT
+db_toko(# );
+CREATE TABLE
+db_toko=#
+db_toko=# -- Buat tabel orders
+db_toko=# CREATE TABLE IF NOT EXISTS orders (
+db_toko(#     order_id SERIAL PRIMARY KEY,
+db_toko(#     cust_id INT REFERENCES customer(cust_id),
+db_toko(#     prod_id INT REFERENCES product(prod_id),
+db_toko(#     quantity INT,
+db_toko(#     order_date DATE
+db_toko(# );
+CREATE TABLE
+db_toko=#
+db_toko=# -- Masukkan 5 data customer
+db_toko=# INSERT INTO customer (name, city, phone) VALUES
+db_toko-# ('Andi Saputra', 'Jakarta', '081234567890'),
+db_toko-# ('Bella Putri', 'Bandung', '081234567891'),
+db_toko-# ('Candra Wijaya', 'Surabaya', '081234567892'),
+db_toko-# ('Dina Kartika', 'Medan', '081234567893'),
+db_toko-# ('Eko Prasetyo', 'Semarang', '081234567894');
+INSERT 0 5
+db_toko=#
+db_toko=# -- Masukkan 5 data produk
+db_toko=# INSERT INTO product (product_name, price, stock) VALUES
+db_toko-# ('Mouse Logitech M100', 150000, 20),
+db_toko-# ('Keyboard Mechanical RGB', 450000, 10),
+db_toko-# ('Monitor LG 24"', 2500000, 5),
+db_toko-# ('Speaker JBL Go 2', 850000, 15),
+db_toko-# ('Hardisk Eksternal 1TB', 900000, 8);
+INSERT 0 5
+db_toko=#
+db_toko=# -- Masukkan 5 data pesanan
+db_toko=# INSERT INTO orders (cust_id, prod_id, quantity, order_date) VALUES
+db_toko-# (1, 1, 2, '2025-04-01'),
+db_toko-# (2, 2, 1, '2025-04-02'),
+db_toko-# (3, 3, 1, '2025-04-03'),
+db_toko-# (4, 4, 1, '2025-04-04'),
+db_toko-# (5, 5, 2, '2025-04-05');
+INSERT 0 5
+db_toko=#
+db_toko=# -- Contoh UPDATE: Ubah nama customer
+db_toko=# UPDATE customer
+db_toko-# SET name = 'Andi Suryadi'
+db_toko-# WHERE cust_id = 1;
+UPDATE 1
+db_toko=#
+db_toko=# -- Contoh UPDATE: Tambah stok produk
+db_toko=# UPDATE product
+db_toko-# SET stock = stock + 5
+db_toko-# WHERE prod_id = 2;
+UPDATE 1
+db_toko=#
+db_toko=# -- Contoh DELETE: Hapus pesanan dengan order_id = 5
+db_toko=# DELETE FROM orders
+db_toko-# SET name = 'Andi Suryadi'
+db_toko-# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner
+--------+----------+-------+----------
+ public | customer | table | postgres
+ public | orders   | table | postgres
+ public | product  | table | postgres
+(3 rows)
+
+
+db_toko-# SELECT * FROM customer;
+ERROR:  syntax error at or near "SET"
+LINE 2: SET name = 'Andi Suryadi'
+        ^
+db_toko=# SELECT * FROM product;
+ prod_id |      product_name       |   price    | stock
+---------+-------------------------+------------+-------
+       1 | Mouse Logitech M100     |  150000.00 |    20
+       3 | Monitor LG 24"          | 2500000.00 |     5
+       4 | Speaker JBL Go 2        |  850000.00 |    15
+       5 | Hardisk Eksternal 1TB   |  900000.00 |     8
+       2 | Keyboard Mechanical RGB |  450000.00 |    15
+(5 rows)
+
+
+db_toko=# SELECT * FROM orders;
+ order_id | cust_id | prod_id | quantity | order_date
+----------+---------+---------+----------+------------
+        1 |       1 |       1 |        2 | 2025-04-01
+        2 |       2 |       2 |        1 | 2025-04-02
+        3 |       3 |       3 |        1 | 2025-04-03
+        4 |       4 |       4 |        1 | 2025-04-04
+        5 |       5 |       5 |        2 | 2025-04-05
+(5 rows)
